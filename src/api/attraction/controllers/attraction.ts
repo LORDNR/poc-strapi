@@ -3,9 +3,9 @@
  */
 
 import { factories } from '@strapi/strapi'
-import {sanitize} from '@strapi/utils'
+import { sanitize } from '@strapi/utils'
 
-export default factories.createCoreController('api::attraction.attraction', ({strapi}) => ({
+export default factories.createCoreController('api::attraction.attraction', ({ strapi }) => ({
 
   async find(ctx) {
     const { contentAPI } = sanitize;
@@ -25,7 +25,7 @@ export default factories.createCoreController('api::attraction.attraction', ({st
     const { id } = ctx.params;
     const contentType = strapi.contentType('api::attraction.attraction')
     const query = {
-      filters: {uid: id},
+      filters: { uid: id },
       ...ctx.query
     }
 

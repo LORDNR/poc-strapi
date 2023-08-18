@@ -38,14 +38,31 @@ export default factories.createCoreController('api::category.category', ({ strap
   async update(ctx) {
     try {
       const findOneCategory = await this.findOne(ctx)
-      const id = findOneCategory.id
 
+      if (!findOneCategory) return
+
+      const id = findOneCategory.id
       const { body } = ctx.request;
       body.updatedAt = new Date()
 
       const updateCategory = await strapi.entityService.update("api::category.category", id, body)
 
       return updateCategory
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  async delete(ctx) {
+    try {
+      const findOneCategory = await this.findOne(ctx)
+
+      if (!findOneCategory) return
+
+      const id = findOneCategory.id
+      await strapi.entityService.delete("api::category.category", id)
+
+      ctx.send({}, 204)
     } catch (err) {
       console.log(err);
     }
