@@ -2,11 +2,12 @@
  * category controller
  */
 
-import { factories } from '@strapi/strapi'
-import {sanitize} from '@strapi/utils'
+import { factories, } from '@strapi/strapi'
+import { sanitize } from '@strapi/utils'
 
-export default factories.createCoreController('api::category.category', ({ strapi }) =>  ({
-  async find(ctx) {
+
+export default factories.createCoreController('api::category.category', ({ strapi }) => ({
+  async find(ctx: any) {
     const { contentAPI } = sanitize;
     const contentType = strapi.contentType('api::category.category')
     const query = {
@@ -24,7 +25,7 @@ export default factories.createCoreController('api::category.category', ({ strap
     const { id } = ctx.params;
     const contentType = strapi.contentType('api::category.category')
     const query = {
-      filters: {uid: id},
+      filters: { uid: id },
       ...ctx.query
     }
 
@@ -32,5 +33,21 @@ export default factories.createCoreController('api::category.category', ({ strap
 
     const arrayResponse = await contentAPI.output(category, contentType, ctx.state.auth);
     return arrayResponse[0];
+  },
+
+  async update(ctx) {
+    try {
+      const findOneCategory = await this.findOne(ctx)
+      const id = findOneCategory.id
+
+      const { body } = ctx.request;
+      body.updatedAt = new Date()
+
+      const updateCategory = await strapi.entityService.update("api::category.category", id, body)
+
+      return updateCategory
+    } catch (err) {
+      console.log(err);
+    }
   }
 }))
